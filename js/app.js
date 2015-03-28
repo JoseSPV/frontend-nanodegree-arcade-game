@@ -57,11 +57,13 @@ var Player = function(settings) {
 
     if( settings ) {
 
-        this.x = settings.initialPosition.x || 202;
-        this.y = settings.initialPosition.y || 382;
-        this.movementSpeed = 100;
+        this.x = settings.initialPosition.x || 0;
+        this.y = settings.initialPosition.y || 0;
+        this.xMovementSpeed = 101;
+        this.yMovementSpeed = 83;
         this.specialAbility = 0;
         this.sprite = settings.playerSprite || 'images/char-cat-girl.png';
+
 
     }
 
@@ -84,20 +86,17 @@ Player.prototype.handleInput = function(keyPressed) {
 
         switch(keyPressed) {
 
-            case 'left':    this.x -= this.movementSpeed;
+            case 'left':    this.x -= this.xMovementSpeed;
                             break;
 
-            case 'up':      this.y -= this.movementSpeed;
+            case 'up':      this.y -= this.yMovementSpeed;console.log(this.y);
                             break;
 
-            case 'right':   this.x += this.movementSpeed;
+            case 'right':   this.x += this.xMovementSpeed;
                             break;
 
-            case 'down':    this.y += this.movementSpeed;
+            case 'down':    this.y += this.yMovementSpeed;
                             break;
-
-            case 'spacebar': this.specialAbility = 1;
-                             break;
 
         default:
                     break;
@@ -105,34 +104,44 @@ Player.prototype.handleInput = function(keyPressed) {
 
 }
 
+// The function checks wheter the player is within the boundaries defined in "canvasBoundaries", if not the player won't be allowed to continue moving in this direction
 function checkBoundaries() {
 
-    if(player.x < 0) {
-        player.x = 0;
+    if(player.x < canvasBoundaries.left) {
+        player.x = canvasBoundaries.left;
     }
-    else if(player.x > 505 - 101) {
-        player.x = 505 - 101;;
-    }
-
-    if(player.y < 0) {
-        player.y = 0;
-    }
-    else if(player.y > 564 - 171) {
-
-        player.y = 382;
+    else if(player.x > canvasBoundaries.right - 101) {
+        player.x = canvasBoundaries.right - 101;
     }
 
-    ///console.log(player);
+    if(player.y < canvasBoundaries.top) {
+        console.log(player.y+' '+canvasBoundaries.top);
+        player.y = canvasBoundaries.top;
+    }
+    else if(player.y > canvasBoundaries.bottom ) {
+        player.y = canvasBoundaries.bottom;
+    }
 
 }
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
+
+// Limits the player movements
+var canvasBoundaries = {
+    "left": 0,
+    "top":  -5,
+    "right": 505,
+    "bottom" : 382
+
+};
+
 var allEnemies = [];
 
+/* TODO: calculate the initial position according to the canvas size */
 var playerSettings = {
-    "initialPosition": {"x": 200, "y": 400},
+    "initialPosition": {"x": 202, "y": 382},
 };
 var player = new Player(playerSettings);
 
@@ -145,8 +154,7 @@ document.addEventListener('keyup', function(e) {
         37: 'left',
         38: 'up',
         39: 'right',
-        40: 'down',
-        32: 'spacebar'
+        40: 'down'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
