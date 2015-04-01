@@ -19,7 +19,6 @@
              * loop through each value and call our image
              * loader on that image file
              */
-            console.log('Array: ' + urlOrArr);
             urlOrArr.forEach(function(url) {
                 _load(url);
             });
@@ -46,7 +45,6 @@
             /* This URL has not been previously loaded and is not present
              * within our cache; we'll need to load this image.
              */
-             console.log('not ' + url);
             var img = new Image();
             img.onload = function() {
                 /* Once our image has properly loaded, add it to our cache

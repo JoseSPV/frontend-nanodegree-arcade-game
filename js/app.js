@@ -1,3 +1,45 @@
+// The function checks wheter the player is within the boundaries defined in "playerCanvasBoundaries", if not the player won't be allowed to continue moving in this direction
+function checkBoundaries() {
+
+    if(player.x < playerCanvasBoundaries.left) {
+        player.x = playerCanvasBoundaries.left;
+    }
+    else if(player.x > playerCanvasBoundaries.right - 101) {
+        player.x = playerCanvasBoundaries.right - 101;
+    }
+
+    if(player.y < playerCanvasBoundaries.top) {
+        player.y = playerCanvasBoundaries.top;
+    }
+    else if(player.y > playerCanvasBoundaries.bottom ) {
+        player.y = playerCanvasBoundaries.bottom;
+    }
+
+}
+
+function checkCollisions () {
+
+    var numberOfEnemies = allEnemies.length,
+        collisionDetected = 0;
+        i = 0;
+
+    while( !collisionDetected && i < numberOfEnemies ) {
+
+        if( allEnemies[i].x < player.x + player.size.width &&
+            allEnemies[i].x + allEnemies[i].size.width > player.x &&
+            allEnemies[i].y < player.y + player.size.height &&
+            allEnemies[i].size.height + allEnemies[i].y > player.y ) {
+
+            collisionDetected = 1;
+
+        } else {
+            i++;
+        }
+    }
+
+    return collisionDetected;
+}
+
 // Enemies our player must avoid
 var Enemy = function(settings) {
     // Variables applied to each of our instances go here,
@@ -7,7 +49,7 @@ var Enemy = function(settings) {
     // a helper we've provided to easily load images
     this.x = settings.initialPosition.x || 0;
     this.y = settings.initialPosition.y || 0;
-    this.size = [101,65];
+    this.size = { "width": 80, "height": 65 };
     this.speed = settings.xMovementSpeed || 100;
     this.sprite = 'images/enemy-bug.png';
 
@@ -37,25 +79,14 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-
-/*
-//Player object accepts an object with some customizable settings.
-
-@param object settings: object with the settings the new player created.
-
-settings = {
-    "initialPosition" = {"x": value, "y": value},
-    "playerSprite" = 'spriteUrl',
-    "specialAbility" = superPower.name
-};
-*/
 var Player = function(settings) {
 
     if( settings ) {
 
         this.x = settings.initialPosition.x || 0;
         this.y = settings.initialPosition.y || 0;
-        this.size =[101,];
+        this.size = { "width": 80
+        ç, "height": 20 };
         this.xMovementSpeed = 101;
         this.yMovementSpeed = 83;
         this.specialAbility = 0;
@@ -65,10 +96,10 @@ var Player = function(settings) {
 }
 
 Player.prototype.update = function() {
-    //check if player is within the canvas boundaries
-    //cheackColisions();
     checkBoundaries();
-
+    if (checkCollisions() ) {
+        console.log("colision detectada");
+    }
 }
 
 Player.prototype.render = function() {
@@ -97,24 +128,6 @@ Player.prototype.handleInput = function(keyPressed) {
 
 }
 
-// The function checks wheter the player is within the boundaries defined in "playerCanvasBoundaries", if not the player won't be allowed to continue moving in this direction
-function checkBoundaries() {
-
-    if(player.x < playerCanvasBoundaries.left) {
-        player.x = playerCanvasBoundaries.left;
-    }
-    else if(player.x > playerCanvasBoundaries.right - 101) {
-        player.x = playerCanvasBoundaries.right - 101;
-    }
-
-    if(player.y < playerCanvasBoundaries.top) {
-        player.y = playerCanvasBoundaries.top;
-    }
-    else if(player.y > playerCanvasBoundaries.bottom ) {
-        player.y = playerCanvasBoundaries.bottom;
-    }
-
-}
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -135,7 +148,7 @@ var enemiesCanvasBoundaries = {
     "right": 606,
     "bottom": 165,
 }
-enemiesSpawnRows = [60,135,235];
+enemiesSpawnRows = [60,135,225];
 enemiesSpawnCols = [0,-110,-150,-190,-230,-260];
 var enemiesAmount = 6;
 var enemiesVelocity = [110,220,250,300,350,375];
@@ -154,32 +167,17 @@ for( var i = 0; i < enemiesAmount; i++ ) {
             }
         )
     )
-
-
     enemiesSpawnCols.splice(colIndex,1);
 }
-
-/*allEnemies = [
-    new Enemy(
-        {
-            "initialPosition": { "x": -101, "y": 171 },
-            "xMovementSpeed": enemiesVelocity[Math.floor(Math.random()*7)]
-        }
-    ),
-    new Enemy(
-        {
-            "initialPosition": { "x": 0, "y": 250 },
-            "xMovementSpeed": enemiesVelocity[Math.floor(Math.random()*7)]
-        }
-    )
-];*/
-
 
 /* TODO: calculate the initial position according to the canvas size */
 var playerSettings = {
     "initialPosition": {"x": 202, "y": 382}
 };
 player = new Player(playerSettings);
+
+console.log(player);
+console.log(allEnemies[0]);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
