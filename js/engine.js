@@ -21,14 +21,15 @@ var Engine = (function(global) {
      */
     var doc = global.document,
         win = global.window,
+        gameWrapper = doc.getElementById("gameWrapper"),
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
-        gameOver = false;
 
     canvas.width = 505;
     canvas.height = 606;
-    doc.body.appendChild(canvas);
+
+    gameWrapper.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -80,8 +81,11 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
+        //game.checkCollisions()
+        //if collision && game.gameOver or timeout always is gameover call game.gameOver()
+       // updateEntities(dt);
         // checkCollisions();
+        game.render();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -92,10 +96,11 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+       /* allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        player.update();*/
+        game.renderEntities();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -108,7 +113,13 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
+
+         game.render();
+        //cargar los resources la escena
+        //renderiza
+
+        //==renderiza el nivel
+        /*var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
@@ -124,7 +135,7 @@ var Engine = (function(global) {
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
          */
-        for (row = 0; row < numRows; row++) {
+      /*  for (row = 0; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate
@@ -133,12 +144,12 @@ var Engine = (function(global) {
                  * so that we get the benefits of caching these images, since
                  * we're using them over and over.
                  */
-                ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
+               /* ctx.drawImage(Resources.get(rowImages[row]), col * 101, row * 83);
             }
         }
 
 
-        renderEntities();
+        renderEntities();*/
     }
 
     /* This function is called by the render function and is called on each game
@@ -149,11 +160,14 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+
+        game.renderEntities();
+        //==renderiza el resto de elemntos
+        /*allEnemies.forEach(function(enemy) {
             enemy.render();
         });
 
-        player.render();
+        player.render();*/
     }
 
     /* This function does nothing but it could have been a good place to
@@ -161,39 +175,33 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
-        //gameTimer = 60 //seconds
-        //newPlayer
+        game = new Game();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
      * draw our game level. Then set init as the callback method, so that when
      * all of these images are properly loaded our game will start.
      */
-
-     /* Main title screen */
-
-     /* Choose player screen */
-
-     /* Level screen */
      Resources.load([
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
-        'images/Selector.png',
+        'images/charSelect/Selector.png',
+        'images/charSelect/background.png',
+        'images/charSelect/gui.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/char-cat-girl.png',
         'images/char-horn-girl.png'
     ]);
 
-     //uno por cada pantalla
-
     Resources.onReady(init);
+
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developer's can use it more easily
      * from within their app.js files.
      */
     global.ctx = ctx;
+    global.canvas = canvas;
 })(this);
