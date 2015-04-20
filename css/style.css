@@ -1,20 +1,22 @@
 body {
     text-align: center;
 }
-
 .gameWrapper {
 	width: 835px;
   	height: 700px;
   	padding: 50px 0 0 0;
   	margin: 0 auto;
 }
-
 .sidebar {
 	width: 290px;
 	height: 606px;
 	display: inline-block;
+	margin: 0 20px 0 0;
+	background: url("../images/game/sidebar.png") no-repeat center;
 }
-
 canvas {
 	display: inline-block;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
 }

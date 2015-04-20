@@ -22,7 +22,6 @@ var Engine = (function(global) {
     var doc = global.document,
         win = global.window,
         gameWrapper = doc.getElementById("gameWrapper"),
-        gameSidebar = doc.getElementById("sidebar"),
         canvas = doc.createElement('canvas'),
         ctx = canvas.getContext('2d'),
         lastTime;
@@ -30,7 +29,7 @@ var Engine = (function(global) {
     canvas.width = 505;
     canvas.height = 606;
 
-    gameWrapper.insertBefore(canvas,gameSidebar);
+    gameWrapper.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
@@ -82,18 +81,12 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        //game.checkCollisions()
-        //if collision && game.gameOver or timeout always is gameover call game.gameOver()
-       // updateEntities(dt);
-        // checkCollisions();
-
-        if(game.status === 'gameOVer'){
+        if(game.status === 'reset'){
             reset();
         } else {
             game.update(dt);
             updateEntities(dt);
         }
-
     }
 
     /* This is called by the update function  and loops through all of the
@@ -104,10 +97,6 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-       /* allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
-        });
-        player.update();*/
         game.updateEntities(dt);
     }
 
@@ -138,14 +127,7 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-
         game.renderEntities();
-        //==renderiza el resto de elemntos
-        /*allEnemies.forEach(function(enemy) {
-            enemy.render();
-        });
-
-        player.render();*/
     }
 
     /* This function does nothing but it could have been a good place to
@@ -153,7 +135,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        ctx.globalAlpha = 1;
         game = new Game();
     }
 
@@ -178,7 +159,6 @@ var Engine = (function(global) {
     ]);
 
     Resources.onReady(init);
-
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developer's can use it more easily
