@@ -296,8 +296,11 @@ var Game = function () {
         })
     ];
 
+    /* Music and FX */
     this.backgroundMusic = new Audio('sounds/game.mp3');
     this.winMusic = new Audio('sounds/win.ogg');
+    this.water = new Audio('sounds/water.ogg');
+    this.gameOverMusic = new Audio('sounds/gameOver.ogg');
 
     this.backgroundMusic.volume = 0.2;
 
@@ -374,6 +377,7 @@ Game.prototype.gameOver = function () {
         this.winMusic.play();
         this.gameOvertext = 'You did it!';
     } else {
+        this.gameOverMusic.play();
         this.gameOvertext = 'Game Over!';
     }
 
@@ -574,6 +578,7 @@ GameLevel.prototype.update = function (dt) {
     if (game.player.playerLives.length > 0) {
 
         if (game.player.x >= 0 && game.player.x <= 4 && game.player.y === 0) {
+            game.water.play();
             game.backgroundMusic.pause();
             game.backgroundMusic.currentTime = 0;
             game.loadScene();
