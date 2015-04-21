@@ -147,15 +147,15 @@ var Engine = (function(global) {
         'images/stone-block.png',
         'images/water-block.png',
         'images/grass-block.png',
-        'images/charSelect/Selector.png',
-        'images/charSelect/background.png',
-        'images/charSelect/gui.png',
-        'images/game/heart.png',
         'images/enemy-bug.png',
         'images/char-boy.png',
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
-        'images/char-princess-girl.png'
+        'images/char-princess-girl.png',
+        'images/cursor/Selector.png',
+        'images/charSelect/background.png',
+        'images/charSelect/gui.png',
+        'images/game/heart.png'
     ]);
 
     Resources.onReady(init);

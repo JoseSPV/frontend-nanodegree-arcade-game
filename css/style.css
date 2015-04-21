@@ -1,6 +1,12 @@
 body {
     text-align: center;
 }
+canvas {
+	display: inline-block;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
 .gameWrapper {
 	width: 835px;
   	height: 700px;
@@ -13,10 +19,4 @@ body {
 	display: inline-block;
 	margin: 0 20px 0 0;
 	background: url("../images/game/sidebar.png") no-repeat center;
-}
-canvas {
-	display: inline-block;
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
 }
