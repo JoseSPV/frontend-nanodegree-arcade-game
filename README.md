@@ -1,4 +1,4 @@
-Jose Sancho Pagola - Udacity Course
+Jose Sancho Pagola - Project 3 - Udacity Front-End Web Developer Nanodegree
 
 frontend-nanodegree-arcade-game
 ===============================
@@ -11,11 +11,14 @@ Character selection screen
 - Press enter to confirm your character selection.
 
 Game
-- Use the arrows to move up,left,right and down your player.
-- You have three lives.
+- Use the arrows to move up, left, right and down your player.
 - Reach the water to pass the level.
-- Go through three levels to win.
+- Go through three levels to win and remember, you only have three lives.
 
-Download the code and open the index.html in your browser or you can play here:
+In order to play the game you can:
+- Download the code and open the index.html in your web browser.
+- Play the game here : http://josespv.github.io/
 
-http://josespv.github.io/
+RESOURCES
+==========
+FX, Music and Images: http://opengameart.org/

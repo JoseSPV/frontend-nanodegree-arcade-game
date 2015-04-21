@@ -10,8 +10,10 @@ var Enemy = function(settings) {
     if(settings) {
         this.x = settings.position.x;
         this.y = settings.position.y ;
+
         this.size = {'width': settings.spriteSize.wSize, 'height': settings.spriteSize.hSize}; //defines the box around the bug
         this.xMovementSpeed = settings.speed.xSpeed;
+
         this.sprite = settings.enemySprite;
     } else {
         console.log('Object Enemy @settings (' + typeof settings + ')');
@@ -30,6 +32,7 @@ Enemy.prototype.update = function(dt) {
         this.x = -1;
     }
 
+    // Check if there is a collision between the bug and the player
     if (game.checkCollisions(this,game.player)){
         game.player.damage();
     }
@@ -47,14 +50,20 @@ var Player = function(settings) {
     if(settings) {
         this.x = settings.position.x;
         this.y = settings.position.y;
+
         this.initalX = settings.position.x;
         this.initalY = settings.position.y;
-        this.size = {'width': settings.spriteSize.wSize, 'height': settings.spriteSize.hSize}; //defines the box around the player
+
+        //defines the box around the player used for collisions
+        this.size = {'width': settings.spriteSize.wSize, 'height': settings.spriteSize.hSize};
+
         this.xMovementSpeed = settings.speed.xSpeed;
         this.yMovementSpeed = settings.speed.ySpeed;
+
         this.sprite = settings.playerSprite;
         this.playerLives = [];
 
+        // Draw the lives sprites
         var livesPosition = -0.2;
 
         for(var i = 0; i < settings.lives; i++) {
@@ -71,24 +80,24 @@ var Player = function(settings) {
     }
 };
 
+// Keep player within canvas boundaries
 Player.prototype.update = function() {
-    //keep player within canvas boundaries
     if(this.x < 0) {
         this.x = 0;
-    }
-    else if(this.x > 4) {
+
+    } else if(this.x > 4) {
         this.x  = 4;
     }
 
     if(this.y < 0) {
         this.y = 0;
-    }
-    else if(this.y > 5 ) {
+
+    } else if(this.y > 5 ) {
         this.y = 5;
     }
-
 };
 
+// Draw the player
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x * 101, this.y * 83 - 20);
 };
@@ -96,27 +105,28 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(keyPressed) {
     switch(keyPressed) {
 
-        case 'left':    this.x -= this.xMovementSpeed;
-                        //Sometimes the player is quicker than the browser and the browser doesn't play the sound when he is still playing the previous coursor sound,
-                        //this way we will force to play the sound from the begining
-                        this.playerStepFx.currentTime = 0;
-                        this.playerStepFx.play();
+        case 'left': this.x -= this.xMovementSpeed;
+                     //Sometimes the player is quicker than the browser and the browser doesn't play the sound when he is still playing the previous coursor sound,
+                     //this way we will force to play the sound from the begining
+                     this.playerStepFx.currentTime = 0;
+                     this.playerStepFx.play();
         break;
-        case 'up':      this.y -= this.yMovementSpeed;
-                        this.playerStepFx.currentTime = 0;
-                        this.playerStepFx.play();
+        case 'up': this.y -= this.yMovementSpeed;
+                   this.playerStepFx.currentTime = 0;
+                   this.playerStepFx.play();
         break;
-        case 'right':   this.x += this.xMovementSpeed;
-                        this.playerStepFx.currentTime = 0;
-                        this.playerStepFx.play();
+        case 'right': this.x += this.xMovementSpeed;
+                      this.playerStepFx.currentTime = 0;
+                      this.playerStepFx.play();
         break;
-        case 'down':    this.y += this.yMovementSpeed;
-                        this.playerStepFx.currentTime = 0;
-                        this.playerStepFx.play();
+        case 'down': this.y += this.yMovementSpeed;
+                     this.playerStepFx.currentTime = 0;
+                     this.playerStepFx.play();
         break;
     }
 };
 
+// Removes a live from the player
 Player.prototype.damage = function () {
     this.x = this.initalX;
     this.y = this.initalY;
@@ -127,6 +137,7 @@ Player.prototype.damage = function () {
     this.playerLives.pop();
 };
 
+// Set the player position to it's inital position
 Player.prototype.resetPos = function () {
     this.x = this.initalX;
     this.y = this.initalY;
@@ -168,15 +179,17 @@ Cursor.prototype.handleInput = function (keyPressed) {
     switch (keyPressed) {
 
         case 'left':  if( this.x > 51 ) {
-                        //Sometimes the player is quicker than the browser and the browser doesn't play the sound when he is still playing the previous coursor sound,
-                        //this way we will force to play the sound from the begining
+                        /* Sometimes the player is quicker than the browser and the browser doesn't play the sound
+                        *  when he is still playing the previous coursor sound,
+                        *  setting the currentTime to  "0" we will force to play the sound from the begining
+                        */
                         this.cursorFx.currentTime = 0;
                         this.cursorFx.play();
 
                         this.x -= 101;
                         this.charSelected --;
                       }
-                      break;
+        break;
         case 'right': if( this.x < 354 ) {
                         this.cursorFx.currentTime = 0;
                         this.cursorFx.play();
@@ -184,10 +197,10 @@ Cursor.prototype.handleInput = function (keyPressed) {
                         this.x += 101;
                         this.charSelected ++;
                       }
-                      break;
+        break;
         case 'enter':  this.finish = true;
                        this.confirmFx.play();
-                       break;
+        break;
     }
 };
 
@@ -206,9 +219,10 @@ var Game = function () {
     this.status = '';
     this.gameOvertext = '';
 
-    /* The player is created here with a default settings object
-    *  The coordinates system is (y,x) and we will use tiles as our position unit except for
-    *  level texts and enemies velocities where a higher accuracy is desired
+    /* The player is created here. We will use tiles as our position unit except for
+    *  level texts and enemies velocities where a higher accuracy is desired.
+    *
+    *  Every tile is 101px wide and 83px heigh. Every x coordinate will be our tile unit * the tile width and every y coordinate will be tile * 83
     */
     this.player = new Player({
         'position': {'x': 2 , 'y': 5},
@@ -218,10 +232,11 @@ var Game = function () {
         'lives': 3
     });
 
-    // Game scenes pointer
+    // Game scenes pointers used to know which is the current scene and the next
     this.currentScene = 0;
     this.nextScene = 1;
 
+    // All the scenes the game has
     this.gameScenes = [
         new CharSelection(),
         new GameLevel ({
@@ -288,6 +303,10 @@ var Game = function () {
 
 };
 
+/* Draw the scene if the game status is not gameOver, in this case the game will render the game over screen.
+*
+*  The Game object delegates into the current scene the render, update and handleInput methods.
+*/
 Game.prototype.render = function () {
     if(this.status !== 'gameOver') {
         this.gameScenes[this.currentScene].render();
@@ -319,7 +338,7 @@ Game.prototype.updateEntities = function (dt) {
     }
 };
 
-// Box method for collisions
+// We use the box method to check for collisions between the player and the enemies
 Game.prototype.checkCollisions = function (enemy,player) {
     return (enemy.x < player.x + player.size.width &&
             enemy.x + enemy.size.width > player.x &&
@@ -327,6 +346,7 @@ Game.prototype.checkCollisions = function (enemy,player) {
             enemy.size.height + enemy.y > player.y);
 };
 
+// Loads the next scene and controls if the game has finish
 Game.prototype.loadScene = function (newScene) {
     this.player.resetPos();
 
@@ -346,13 +366,14 @@ Game.prototype.handleInput = function (keyPressed) {
     }
 };
 
+// Change the game status to game over and prepares the game over scene
 Game.prototype.gameOver = function () {
     this.status = 'gameOver';
 
     if (game.player.playerLives.length > 0){
         this.winMusic.play();
         this.gameOvertext = 'You did it!';
-    }else {
+    } else {
         this.gameOvertext = 'Game Over!';
     }
 
@@ -363,8 +384,8 @@ Game.prototype.gameOver = function () {
 /* Game Scenes */
 
 /*
-* This is the scene where the player choose the character
-* The scene will draw the backgrounds, available characters and the cursor the player will use to select the character.
+* This is the scene where the player choose the character.
+* The scene will draw the backgrounds, available characters and the cursor the player will use to select one of the characters.
 */
 var CharSelection = function () {
     this.charSelected = 0;
@@ -388,9 +409,13 @@ var CharSelection = function () {
         'backgroundSpeed': 75,
         'position': {'x': 0, 'y': 0}
     };
+    /* In order to center the non-animated background
+    *   - the x will be (canvas width - background image widht)
+    *   - the y will be (canvas height - background image height)
+    */
     this.backgroundLayer = {
         'image': 'images/charSelect/gui.png',
-        'position': { 'x': 21, 'y': 104 } //canvas width - background image widht # canvas height - background image height, in order to center the non-animated background layer
+        'position': { 'x': 21, 'y': 104 }
     };
 
     // Audio tracks and fx
@@ -416,7 +441,7 @@ CharSelection.prototype.render = function () {
 CharSelection.prototype.renderEntities = function () {
     this.cursor.render();
 
-    // Available characters
+    // Draw the available characters
     var gapsBetweenSprites = this.charsInitalX;
     var availableChars = this.chars.length;
 
@@ -438,7 +463,7 @@ CharSelection.prototype.update = function (dt) {
         // Animate Background
         this.animatedBackgroundLayer.position.y += this.animatedBackgroundLayer.backgroundSpeed * dt;
 
-        // If the image scrolled off the screen, we reset it's 'y' position
+        // If the image scrolled off the screen, we reset it's 'y' position to 0
         if ( this.animatedBackgroundLayer.position.y >= canvas.height ) {
             this.animatedBackgroundLayer.position.y = 0;
         }
@@ -470,7 +495,7 @@ var GameLevel = function (levelSettings) {
     this.enemiesAmount = levelSettings.enemiesAmount;
     this.enemiesSpawnRows = levelSettings.enemiesSpawnRows; // y coordinate
     this.enemiesSpawnCols = levelSettings.enemiesSpawnCols; // x coordinate
-    this.enemiesVelocities = levelSettings.enemiesVelocities; //arbitrary speeds
+    this.enemiesVelocities = levelSettings.enemiesVelocities; // arbitrary speeds
 
     // Other Settings
     this.levelText = levelSettings.levelText;
@@ -482,7 +507,7 @@ var GameLevel = function (levelSettings) {
     var enemyRow = 0;
     for(var i = 0; i < this.enemiesAmount; i++) {
 
-        // For the enemies speed columns and velocities we'll use random numbers within a range previously defined
+        // For the columns and velocities we will use random numbers taken from the arrays previosly defined
         var colIndex = Math.floor(Math.random() * this.enemiesSpawnCols.length);
         var enemySpeed = Math.floor(Math.random() * this.enemiesVelocities.length);
 
@@ -505,7 +530,6 @@ var GameLevel = function (levelSettings) {
 
         enemyRow++;
     }
-
 };
 
 GameLevel.prototype.render = function () {
@@ -526,7 +550,7 @@ GameLevel.prototype.render = function () {
         }
     }
 
-    // Level text
+    // The level text for top right corner
     ctx.font = 'bold 20pt "Comic Sans MS", cursive, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#f1c40f';
@@ -584,11 +608,14 @@ document.addEventListener('keyup', function(e) {
         13: 'enter' //added enter
     };
 
+    // Use the appropriate function to handle the game input
     if(game.currentScene === 0) {
         game.gameScenes[game.currentScene].handleInput(allowedKeys[e.keyCode]);
+
     } else if( game.status === 'gameOver') {
         game.handleInput(allowedKeys[e.keyCode]);
-    }else{
+
+    } else {
         game.player.handleInput(allowedKeys[e.keyCode]);
     }
 
