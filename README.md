@@ -1,6 +1,21 @@
+Jose Sancho Pagola - Udacity Course
+
 frontend-nanodegree-arcade-game
 ===============================
 
-Students should use this rubric: https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797
+HOW TO PLAY
+===========
 
-for self-checking their submission.
+Character selection screen
+- Use the arrows to move character selector.
+- Press enter to confirm your character selection.
+
+Game
+- Use the arrows to move up,left,right and down your player.
+- You have three lives.
+- Reach the water to pass the level.
+- Go through three levels to win.
+
+Download the code and open the index.html in your browser or you can play here:
+
+http://josespv.github.io/
