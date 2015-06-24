@@ -17,7 +17,7 @@ Game
 
 In order to play the game you can:
 - Download the code and open the index.html in your web browser.
-- Play the game here : http://josespv.github.io/
+- Play the game here : http://josespv.github.io/frontend-nanodegree-arcade-game/
 
 RESOURCES
 ==========
